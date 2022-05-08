@@ -10,3 +10,7 @@ fi
 sudo -u ${BUILDER_USER} yay -Syu --noconfirm $(cat aur-packages)
 
 sudo cp ~${BUILDER_USER}/.cache/yay yay-cache -r
+
+mkdir -p output
+
+repo-add /output/ape.db.tar.gz yay-cache/**/*.pkg.tar.zst
