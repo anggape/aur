@@ -7,7 +7,7 @@ if [ -d "yay-cache" ]; then
     sudo -u ${BUILDER_USER} cp "yay-cache" ~${BUILDER_USER}/.cache/yay -r
 fi
 
-sudo -u ${BUILDER_USER} yay -Syu --noconfirm $(cat aur-packages)
+sudo -u ${BUILDER_USER} yay -Syu --norebuild --noconfirm $(cat aur-packages)
 
 sudo cp ~${BUILDER_USER}/.cache/yay yay-cache -r
 
