@@ -1,10 +1,12 @@
 #!/usr/bin/env zsh
 
+set -e
+
 if [ -d "yay-cache" ]; then
     mkdir -p ~${BUILDER_USER}/.cache
-    sudo -u ${BUILDER_USER} mv "yay-cache" ~${BUILDER_USER}/.cache/yay
+    sudo -u ${BUILDER_USER} cp "yay-cache" ~${BUILDER_USER}/.cache/yay -r
 fi
 
-sudo -u ${BUILDER_USER} yay -Syu --noconfirm - <aur-packages
+sudo -u ${BUILDER_USER} yay -Syu --noconfirm $(cat aur-packages)
 
-cp ~${BUILDER_USER}/.cache/yay ${GITHUB_WORKSPACE}/yay-cache
+cp ~${BUILDER_USER}/.cache/yay ${GITHUB_WORKSPACE}/yay-cache -r
