@@ -13,4 +13,4 @@ sudo cp ~${BUILDER_USER}/.cache/yay yay-cache -r
 
 sudo mkdir -p output
 
-sudo repo-add /output/ape.db.tar.gz yay-cache/**/*.pkg.tar.zst
+sudo repo-add output/ape.db.tar.gz yay-cache/**/*.pkg.tar.zst
