@@ -9,4 +9,4 @@ fi
 
 sudo -u ${BUILDER_USER} yay -Syu --noconfirm $(cat aur-packages)
 
-cp ~${BUILDER_USER}/.cache/yay ${GITHUB_WORKSPACE}/yay-cache -r
+cp ~${BUILDER_USER}/.cache/yay yay-cache -r
