@@ -1,9 +1,17 @@
 #!/usr/bin/env zsh
 
+# exit on error
 set -e
 
-sudo -u root git config --global --add safe.directory ${GITHUB_WORKSPACE}
+# run as builder alias
+alis builder="sudo -u ${BUILDER_USER}"
 
+# configure git
+git config --global --add safe.directory ${GITHUB_WORKSPACE}
+git config --global user.name "github-actions[bot]"
+git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+# create git tag for release
 function create_tag() {
     TAG_DATE=$(date '+%Y/%m/%d')
     if [ -z "$1" ]; then
@@ -18,20 +26,39 @@ function create_tag() {
         create_tag ${TAG_ID}
     else
         echo "::set-output name=RELEASE_TAG::${RELEASE_TAG}"
-        sudo -u root git tag "${RELEASE_TAG}"
+        git tag "${RELEASE_TAG}"
     fi
 }
 create_tag
 
-if [ -d "${YAY_CACHE_DIR}" ]; then
-    mkdir -p ~${BUILDER_USER}/.cache
-    sudo -u ${BUILDER_USER} cp "${YAY_CACHE_DIR}" ~${BUILDER_USER}/.cache/yay -r
-fi
+# change working directory to builder home
+pushd ~${BUILDER_USER}
+{
+    # create required directory
+    builder mkdir -p .config/pacman .cache
 
-sudo -u ${BUILDER_USER} yay -Syu --norebuild --noconfirm $(cat aur-packages)
+    # copy makepkg.conf
+    builder cp ${GITHUB_WORKSPACE}/makepkg.conf .config/pacman/makepkg.conf
 
-sudo cp ~${BUILDER_USER}/.cache/yay ${YAY_CACHE_DIR} -r
+    # copy yay cache
+    if [ -d "${GITHUB_WORKSPACE}/${YAY_CACHE_DIR}" ]; then
+        builder cp "${GITHUB_WORKSPACE}/${YAY_CACHE_DIR}" .cache/yay -r
+    fi
 
-sudo mkdir -p output
+    # installing yay
+    builder git clone https://aur.archlinux.org/yay-bin.git
+    pushd yay-bin
+    builder makepkg -sri --needed --noconfirm
+    popd
 
-sudo repo-add output/ape.db.tar.gz ${YAY_CACHE_DIR}/**/*.pkg.tar.zst
+    # install aur packages
+    builder yay -Syu --norebuild --noconfirm $(cat aur-packages)
+
+    # copy yay cache to github workspace
+    cp .cache/yay ${GITHUB_WORKSPACE}/${YAY_CACHE_DIR} -r
+}
+popd #~${BUILDER_USER}
+
+# create pacman repository
+mkdir -p output
+repo-add output/ape.db.tar.gz ${YAY_CACHE_DIR}/**/*.pkg.tar.zst
