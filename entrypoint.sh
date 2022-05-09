@@ -4,7 +4,7 @@
 set -e
 
 # run as builder alias
-alis builder="sudo -u ${BUILDER_USER}"
+alias builder="sudo -u ${BUILDER_USER}"
 
 # configure git
 git config --global --add safe.directory ${GITHUB_WORKSPACE}
