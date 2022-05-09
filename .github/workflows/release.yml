@@ -20,4 +20,12 @@ jobs:
                   key: yay-cache
 
             - name: build pacman repository
+              id: build
               uses: ./
+
+            - name: create release
+              uses: ncipollo/release-action@v1
+              with:
+                  artifacts: 'output/*,yay-cache/**/*.tar.zst'
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag: ${{ steps.build.outputs.RELEASE_TAG }}
