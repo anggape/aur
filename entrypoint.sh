@@ -2,15 +2,15 @@
 
 set -e
 
-if [ -d "yay-cache" ]; then
+if [ -d "${YAY_CACHE_DIR}" ]; then
     mkdir -p ~${BUILDER_USER}/.cache
-    sudo -u ${BUILDER_USER} cp "yay-cache" ~${BUILDER_USER}/.cache/yay -r
+    sudo -u ${BUILDER_USER} cp "${YAY_CACHE_DIR}" ~${BUILDER_USER}/.cache/yay -r
 fi
 
 sudo -u ${BUILDER_USER} yay -Syu --norebuild --noconfirm $(cat aur-packages)
 
-sudo cp ~${BUILDER_USER}/.cache/yay yay-cache -r
+sudo cp ~${BUILDER_USER}/.cache/yay ${YAY_CACHE_DIR} -r
 
 sudo mkdir -p output
 
-sudo repo-add output/ape.db.tar.gz yay-cache/**/*.pkg.tar.zst
+sudo repo-add output/ape.db.tar.gz ${YAY_CACHE_DIR}/**/*.pkg.tar.zst

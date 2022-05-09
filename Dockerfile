@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 
 COPY . .
 
-ENV BUILDER_USER=builder
+ENV BUILDER_USER=builder YAY_CACHE_DIR=yay-cache
 
 RUN pacman -Syu --noconfirm zsh git
 
