@@ -52,7 +52,7 @@ pushd ~${BUILDER_USER}
     popd
 
     # install aur packages
-    builder yay -Syu --norebuild --noconfirm $(cat "${GITHUB_WORKSPACE}/aur-packages")
+    builder yay -Syu $(cat "${GITHUB_WORKSPACE}/aur-packages") --norebuild --noconfirm --noredownload
 
     # copy yay cache to github workspace
     cp .cache/yay ${GITHUB_WORKSPACE}/${YAY_CACHE_DIR} -r
