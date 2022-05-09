@@ -2,6 +2,8 @@
 
 set -e
 
+sudo git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
 function create_tag() {
     TAG_DATE=$(date '+%Y/%m/%d')
     if [ -z "$1" ]; then
@@ -16,7 +18,7 @@ function create_tag() {
         create_tag ${TAG_ID}
     else
         echo "::set-output name=RELEASE_TAG::${RELEASE_TAG}"
-        git tag "${RELEASE_TAG}"
+        sudo git tag "${RELEASE_TAG}"
     fi
 }
 create_tag
