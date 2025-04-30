@@ -25,7 +25,7 @@ function create_tag() {
     if [ $(git tag -l "${RELEASE_TAG}") ]; then
         create_tag ${TAG_ID}
     else
-        echo "::set-output name=RELEASE_TAG::${RELEASE_TAG}"
+        echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_OUTPUT
         git tag "${RELEASE_TAG}"
     fi
 }
