@@ -46,8 +46,8 @@ pushd ~${BUILDER_USER}
     fi
 
     # installing yay
-    builder git clone https://aur.archlinux.org/yay.git
-    pushd yay
+    builder git clone https://aur.archlinux.org/yay-bin.git
+    pushd yay-bin
     builder makepkg -sri --needed --noconfirm
     popd
 
